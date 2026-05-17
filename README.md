@@ -27,8 +27,8 @@ Ekran z czytelnym interfejsem i górnym menu kafelkowym do nawigacji po systemie
 ![Rejestr czytelników w systemie](screenshots/czytelnicy.png)
 *Rysunek 1: Widok zarządzania rejestrem czytelników.*
 
-### 2. Formularz dodawania nowej pozycji (Create / Insert)
-Intuicyjny interfejs pozwalający na wprowadzanie nowych danych. Formularz uwzględnia walidację pól tekstowych, kalendarz dla dat (np. data urodzenia) oraz dynamiczne listy wyboru (dropdown) dla relacji, takich jak przypisywanie rangi użytkownika.
+### 2. Formularz dodawania nowego czytelnika (Create / Insert)
+Intuicyjny interfejs pozwalający na wprowadzanie nowych danych. Formularz uwzględnia walidację pól tekstowych oraz kalendarz dla dat.
 ![Formularz dodawania czytelnika](screenshots/dodajczytelnika.png)
 *Rysunek 2: Formularz rejestracji nowego czytelnika w systemie.*
 
