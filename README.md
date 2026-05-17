@@ -1,30 +1,53 @@
-# System Zarządzania Biblioteką 
+# System Zarządzania Biblioteką
 
-Kompleksowy system zarządzania zasobami bibliotecznymi (czytelnie, książki, czasopisma, pracownicy) oraz operacjami związanymi z rezerwacją, wypożyczaniem i naliczaniem kar. Projekt składa się z relacyjnej bazy danych oraz interfejsu webowego użytkownika.
+Kompleksowy system webowy służący do zarządzania strukturą biblioteczną (czytelnie, książki, czasopisma, pracownicy) oraz operacjami związanymi z rezerwacją, wypożyczaniem i naliczaniem opłat (kar). Projekt łączy w sobie relacyjną bazę danych oraz rozbudowany interfejs użytkownika.
 
-##  Technologie i Narzędzia
+## Technologie i Narzędzia
 
-* **PHP** – logika backendowa aplikacji, obsługa formularzy i komunikacja z bazą danych
-* **SQL (Oracle)** – relacyjna baza danych, wykorzystanie sekwencji (`SEQUENCE`) oraz zaawansowanych relacji między tabelami
-* **HTML5 / CSS3** – warstwa wizualna interfejsu użytkownika
+* **PHP** – logika biznesowa aplikacji, dynamiczne generowanie stron oraz komunikacja z bazą danych za pomocą rozszerzenia OCI (Oracle Call Interface).
+* **SQL (Oracle)** – relacyjna baza danych oparta na zaawansowanych relacjach, sekwencjach (`SEQUENCE`) oraz dedykowanych pakietach i procedurach (np. `zamowienia_pkg`).
+* **Bootstrap 5** – framework CSS zapewniający nowoczesny, czytelny i responsywny wygląd interfejsu.
 
-##  Struktura Bazy Danych
+## Struktura Projektu i Bazy Danych
 
-Baza danych odwzorowuje pełną strukturę operacyjną biblioteki i zawiera następujące tabele:
-* `CZYTELNICY` oraz `RANGI` – rejestr użytkowników z limitami wypożyczeń zależnymi od stażu.
-* `KSIAZKI`, `CZASOPISMA` oraz `ARTYKULY` – pełny katalog zasobów bibliotecznych.
-* `ZAMOWIENIA` i `WYPOZYCZENIA` – rejestracja procesu rezerwacji i wypożyczeń.
-* `KARY` – system opłat za przetrzymanie książek nakładany przez tabelę `PRACOWNICY`.
-* `CZYTELNIA` – spis fizycznych placówek bibliotecznych.
+Aplikacja została podzielona na moduły odpowiadające poszczególnym obszarom działalności biblioteki. Każdy moduł umożliwia przeglądanie, dodawanie (`insert`) oraz edycję/aktualizację (`update`) danych:
 
-##  Instrukcja Uruchomienia
+* **Zasoby:** `ksiazki.php`, `czasopisma.php`, `artykuly.php` (katalogowanie literatury, prasy oraz powiązanych artykułów).
+* **Użytkownicy i Kadra:** `czytelnicy.php`, `pracownicy.php` (rejestr czytelników z przypisanymi rangami/uprawnieniami oraz baza pracowników biblioteki).
+* **Operacje:** `zamowienia.php`, `wypozyczenia.php`, `pokazZamowienie.php` (pełna obsługa procesu rezerwacji książek/czasopism oraz rejestracja fizycznych wypożyczeń i zwrotów).
+* **Finanse:** `kary.php` (rejestr i zarządzanie opłatami za nieterminowe zwroty zasobów).
+* **Konfiguracja połączenia:** `connection.php`, `db.php`.
 
-### 1. Przygotowanie Bazy Danych
-1. Otwórz swój program do obsługi baz danych (np. *Oracle SQL Developer*).
-2. Wykonaj skrypt zawarty w pliku `db.sql`, aby automatycznie utworzyć sekwencje, tabele oraz zaimportować testowe dane.
+## Interfejs użytkownika (Zrzuty ekranu)
 
-### 2. Uruchomienie Aplikacji PHP
-1. Skopiuj pliki z kodem aplikacji (pliki `.php` i foldery towarzyszące) do katalogu lokalnego serwera (np. `htdocs` w programie **XAMPP** lub `www` w **WampServer**).
-2. Upewnij się, że w pliku konfiguracyjnym aplikacji (np. `config.php` / `db.php`) wprowadziłeś poprawne dane logowania do swojej bazy danych.
-3. Uruchom serwer Apache w panelu XAMPP.
-4. Otwórz przeglądarkę i przejdź pod adres `http://localhost/twoj_folder_z_projektym`.
+Poniżej przedstawiono główne ekrany systemu zarządzania biblioteką wraz z formularzami operacyjnymi:
+
+### 1.Przeglądanie danych (Read & Delete)
+Ekran z czytelnym interfejsem i górnym menu kafelkowym do nawigacji po systemie. Tabela dynamicznie pobiera dane z bazy Oracle i wyświetla kluczowe informacje, oferując także akcje usuwania lub przejścia do edycji każdego rekordu.
+![Rejestr czytelników w systemie](screenshots/czytelnicy.png)
+*Rysunek 1: Widok zarządzania rejestrem czytelników.*
+
+### 2. Formularz dodawania nowej pozycji (Create / Insert)
+Intuicyjny interfejs pozwalający na wprowadzanie nowych danych. Formularz uwzględnia walidację pól tekstowych, kalendarz dla dat (np. data urodzenia) oraz dynamiczne listy wyboru (dropdown) dla relacji, takich jak przypisywanie rangi użytkownika.
+![Formularz dodawania czytelnika](screenshots/dodajczytelnika.png)
+*Rysunek 2: Formularz rejestracji nowego czytelnika w systemie.*
+
+### 3. Moduł edycji i aktualizacji danych (Update)
+Ekran edycji automatycznie uzupełnia pola formularza aktualnymi danymi wybranego rekordu pobranymi z bazy danych. Umożliwia modyfikację parametrów (np. adresu zamieszkania czy rangi) i bezpieczne nadpisanie rekordu za pomocą operacji `UPDATE`.
+![Formularz edycji czytelnika](screenshots/edytujczytelnika.png)
+*Rysunek 3: Panel modyfikacji danych istniejącego czytelnika.*
+
+## Instrukcja Uruchomienia i Wdrożenia
+
+### 1. Przygotowanie i konfiguracja Bazy Danych
+1. Zaloguj się do swojego klienta bazy danych (np. *Oracle SQL Developer*).
+2. Wykonaj skrypt `.sql` dołączony do projektu. Skrypt utworzy niezbędne struktury tabel, sekwencje generujące klucze główne oraz pakiety procedur, a także wypełni bazę danymi testowymi.
+
+### 2. Uruchomienie lokalnego serwera Apache
+1. Skopiuj zawartość folderu `src/` do katalogu roboczego swojego lokalnego serwera (np. `htdocs/` w środowisku **XAMPP** lub `www/` w **WampServer**).
+2. Otwórz plik `connection.php` (lub `db.php`) i upewnij się, że dane dostępowe (host, port, nazwa użytkownika Oracle, hasło) są poprawne i zgodne z Twoją konfiguracją lokalną.
+3. Uruchom moduł **Apache** w panelu kontrolnym serwera.
+4. Otwórz przeglądarkę internetową i wpisz adres URL:
+   ```text
+   http://localhost/nazwa_twojego_folderu/
+   ```
